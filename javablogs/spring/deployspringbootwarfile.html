@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamar.io</title>
+    <link rel="stylesheet" href="../../app.css">
+    <link rel="icon" type="image/jpg" href="../pictures/profile_pic.JPG">
+
+    <style>
+        body{
+            background: url('../../pictures/infotechnano_logo.png');
+            background-position: center center;
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <section class='header'>
+        <h1 id="header-title">Jamar.io</h1>
+        <nav class='navbar'>
+            <div class='nav-item'>
+              <a href="../../index.html" class='nav-link'>home</a>  
+            </div>
+            <div class='nav-item'>
+                <a href="../../blog.html" class='nav-link'>blog</a>
+            </div>
+            <div class='nav-item'>
+                <a href="../../projects.html" class='nav-link'>projects</a>
+            </div>
+            <div class='nav-item'>
+                <a href="../../resume.html" class='nav-link'>resume</a>
+            </div>
+        </nav>
+        <div class='header-bottom'></div>
+    </section>
+    <h1 class="specific-blog-title">Deploying Spring Boot Application War File To Digital Ocean With Apache Tomcat</h1>
+
+    <div class="blog-content" style="width: 90%;">
+        <section class="blog-section" id="intro">
+            <h1 class="blog-section-header">Introduction</h1>
+           <p class="blog-paragraph">
+                Hi guys my name is Jamar P and I'm going to show you how to deploy a java spring boot war file to tomcat server.
+                I will be using digital oceans for hosting as I find them as one of my favorites when it comes to the freedom they give you.
+                Before I get started, I would like to give a shout out to BogoToBogo for an amazing article on deploying to tomcat,
+                my blog is very similar, but
+                <a style="text-decoration: none; color: rgb(38, 255, 0);" target="_blank" 
+                href="https://www.bogotobogo.com/Java/tutorials/Spring-Boot/Spring-Boot-Maven3-Elicpse-Tomcat-War-file.php">this</a> 
+                
+                article goes in it a little more in depth, but I cover the digital oceans part as well which
+                is just setting up the droplet.  I will also cover installing postgresql on Ubuntu as well.  Also
+                check out an article about that
+                <a style="text-decoration: none; color: rgb(38, 255, 0);" target="_blank" 
+                href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-18-04">here</a> 
+                if you want.  The actual deployment process part won't start until a few paragraphs down so grab some popcorn.
+            
+            </p> 
+        </section>
+        
+        <section class="blog-section" id="part1">
+            <h1 class="blog-section-header">Part 1: Setting Up Digital Oceans Droplet</h1>
+
+            <p class="blog-paragraph">
+                So once you have created a digital oceans account you should come to a screen that looks like this:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic1.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                So from here you will want to keep the current version of Ubuntu selected.  I'm going to do the basic
+                plan for CPU of $5/month.  They require you to pay $5 up front when signing up, but that goes towards your
+                credit for later usage.  You can choose any data center you want:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic2.png" alt="digital oceans droplet creation" class="blog-image">
+        
+            <p class="blog-paragraph">
+                I also will not be adding volume storage for this demo.  Next are the options for accessing your
+                droplet.  I will choose the password option because explaining ssh is not that hard, but it takes away
+                from the point of this demo:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic3.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                After that pick the name you want for your droplet, it should be unique, I did not check the add backups option,
+                then click the create droplet button at the bottom and that's it!
+            </p>
+        </section>
+
+        <section class="blog-section" id="part2">
+            <h1 class="blog-section-header">Part 2: Accessing Your Droplet And Installing PostgreSQL</h1>
+
+            <p class="blog-paragraph">
+                Now I want you to do a couple of things.  First, download Putty which I will be using
+                to access the droplet 
+                <a style="text-decoration: none; color: rgb(38, 255, 0);" target="_blank" 
+                href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html">here</a>  
+                .  Putty is free and is used to access remote computers on Windows.  Next, I want you to go
+                to your Digital Ocean dashboard and copy the IP address associated with your droplet you just created.
+                Now for the fun stuff!
+            </p>
+
+            <p class="blog-paragraph">
+                In Putty I want you to go the the category that says SSH and click on it.  In here, make sure the 
+                SSH protocol is on version 2.  Now, click the Session category and put your droplet IP address in the
+                "Host Name (or IP address)" text box.  Make sure the port is 22 and the connection type is SSH.  Now
+                type a name in the "Saved Sessions" text box and press save to save your connection configuration so
+                you won't have to do this again later.  After that click open and we are ready to begin installing postgresql!
+            </p>
+
+            <p class="blog-paragraph">
+                So after you enter your password that you made when creating your droplet, there are a few commands
+                we need to call in order to set up postgresql.  By the way, if they ask you for a username it should
+                most likely be "root".  First let's update the packages that are already installed on this linux droplet:
+            </p>
+
+            <div class="blog-code">
+                sudo apt update
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's download two packages that are needed to use postgresql, by the way the word sudo is
+                an abbreviation for super doer which is what the root user is meaning the user who has admin privileges.
+                The sudo command allows us to run other commands with admin level privilege so that they are allowed:
+            </p>
+
+            <div class="blog-code">
+                sudo apt install postgresql postgresql-contrib
+            </div>
+
+            <p class="blog-paragraph">
+                It's done being installed!  Next let's go into postgresql by doing the following:
+            </p>
+
+            <div class="blog-code">
+                sudo -u postgres psql
+            </div>
+
+            <p class="blog-paragraph">
+                From here you can create databases, tables and anything you would normally do with SQL databases.
+                To exit postgresql just enter \q and press enter.
+            </p>
+
+            <p class="blog-paragraph">
+                Now we need to download the jdbc postgresql driver and set it up with tomcat, but we will do that
+                further down below once we set up tomcat.
+            </p>
+        </section>
+
+        <section class="blog-section" id="part3">
+            <h1 class="blog-section-header">Part 3: Installing Java</h1>
+
+            <p class="blog-paragraph">
+                Ok so now we need to install java on to this droplet since we are hosting a java project.
+                Let's start by doing the following which just installs the java jdk on to your droplet:
+            </p>
+
+            <div class="blog-code">
+                sudo apt-get install default-jdk
+            </div>
+
+            <p class="blog-paragraph">
+                Once we do that we can run the following to check to see that it installed correctly:
+            </p>
+
+            <div class="blog-code">
+                java --version
+            </div>
+
+            <p class="blog-paragraph">
+                Alright, so now let's set the JAVA_HOME environment variable so that other programs know
+                where the java jdk is.  First let's navigate to the /etc folder (by the way make sure you
+                are in the root folder before doing this by doing either):
+            </p>
+
+            <div class="blog-code">
+                cd ~/..
+            </div>
+
+            <p class="blog-paragraph">
+                or
+            </p>
+
+            <div class="blog-code">
+                cd /
+            </div>
+
+            <p class="blog-paragraph">
+                Once you are in the root folder let's navigate to the /etc folder:
+            </p>
+
+            <div class="blog-code">
+                cd /etc
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's use the nano text editor (nicely named) so that we can edit the variables in the path
+                variables file.
+            </p>
+
+            <div class="blog-code">
+                nano environment
+            </div>
+
+            <p class="blog-paragraph">
+                It should look like the picture below, but without the JAVA_HOME part.  Once you are in the
+                nano text editor, hit enter to move down to a new line or hit the down arrow.
+                Now let's add the following to set the JAVA_HOME environment class path variable.
+                Depending on what version of java jdk you downloaded your path could be different,
+                but it should look similar to the following:
+            </p>
+
+            <div class="blog-code">
+                JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+            </div>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic4.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Make sure the double quotes are included.  Once you are done with that, hit Ctrl + O to
+                write out the lines, then hit Ctrl + X and then enter to close the nano text editor. 
+            </p>
+
+            <p class="blog-paragraph">
+                Next let's set the new changes to the enviroment variable file by doing the following.
+                If you are in the /etc folder then it will be this:
+            </p>
+
+            <div class="blog-code">
+                source /environment
+            </div>
+
+            <p class="blog-paragraph">
+                If you are in the root folder (just /) then it will be this:
+            </p>
+
+            <div class="blog-code">
+                source /etc/environment
+            </div>
+
+            <p class="blog-paragraph">
+                Once that is done, let's check to make sure the JAVA_HOME variable is changed
+                by doing the following:
+            </p>
+
+            <div class="blog-code">
+                echo $JAVA_HOME
+            </div>
+
+            <p class="blog-paragraph">
+                We should get this or something like it:
+            </p>
+
+            <div class="blog-code">
+                /usr/lib/jvm/java-11-openjdk-amd64
+            </div>
+        </section>
+
+        <section class="blog-section" id="part4">
+            <h1 class="blog-section-header">Part 4: Configuring IntelliJ To Produce A .War File</h1>
+
+            <p class="blog-paragraph">
+                Now I used IntelliJ for this demo so I will show you how to build a war file assuming
+                that you have a spring boot application already.  One difference between the jar and war
+                files is that the war file does not need to be ran inside an embedded tomcat server.
+                I will now show you the pom.xml file dependencies and changes for creating a .war file:
+            </p>
+
+            <p class="blog-paragraph">
+                In the build xml tag most likely at the bottom of your pom.xml file should be where the plugin
+                goes.  This plugin is used to direct where the files are that need to be used to build a jar/war
+                file:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic5.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                The profile tag is used for when you want to add multiple servers.  Another profile could be for
+                the jetty server:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic6.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Next is the packaging tag which specifies that we want the war file instead of the default jar file.
+                We also want the first two dependencies here we don't need to worry about the spring boot starter security
+                for this one even though it is very important for enterprise level APIs:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic7.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                The next picture is for some more dependencies that we need.  We only need the postgresql one from here.
+                I recommend flyway db as well for migrating the database schemas automatically when the spring application runs
+                so that you don't have to manually create the tables when you migrate the code:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic8.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                This last picture for the pom.xml is for the actuator dependency which is optional, but helps with
+                things such as showing the health of the server by calling the endpoint "/health" and it does a few
+                other things as well:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic9.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Now we need to use maven to do a packaging of our spring boot application.  Let's go over to the maven
+                window and double click the "package" option.  Once it builds successfully there should be a .war file
+                in your target folder:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic10.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic11.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Now you might notice that if you run the spring boot application the normal way again, you might get an error.
+                In order to fix this we have to set up a new run configuration.  First let's click the drop down arrow
+                where it says your application name and select "Edit Configurations...":
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic12.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Once we do that, we now need to click the plus button and create a new run configuration.
+                Select the jar application option:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic13.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Now let's "Path to JAR" text box to the .war file that we just generated in the target folder from earlier.
+                Also set the working directory to the root folder in your project.  Set the JRE field to whatever JDK that
+                you have installed and connected with IntelliJ.  "Search sources using modules's classpath" should be set to
+                whole project.  Lastly, let's add a maven goal in the "Before launch" section at the bottom and put
+                "clean install" and that's it!  Now when you run your spring boot application it should run properly just
+                like before.
+            </p>
+        </section>
+
+        <section class="blog-section" id="part5">
+            <h1 class="blog-section-header">Part 5: Installing Apache Tomcat</h1>
+
+            <p class="blog-paragraph">
+                Now we need to install the apache tomcat server program to our droplet.
+                So before we download apache tomcat, let's create a user group for the tomcat
+                server:
+            </p>
+
+            <div class="blog-code">
+                sudo groupadd tomcat
+            </div>
+
+            <p class="blog-paragraph">
+                Now let's create a tomcat user for this group.  The /bin/false means that nobody can log
+                into this account:
+            </p>
+
+            <div class="blog-code">
+                sudo useradd -s /bin/false -g tomcat -d /var/lib/tomcat9 tomcat
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's download the tar.gz file from the apache downloads page by googling "apache tomcat download"
+                and right clicking the tar.gz link and copying it like below.  Make sure you copy the link from the binary distributions
+                category:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic14.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic15.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Next we need to run the following to actually pull the tar.gz on to our droplet:
+            </p>
+
+            <div class="blog-code">
+                wget http://mirrors.advancedhosters.com/apache/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.tar.gz
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's move this file by first creating a new directory:
+            </p>
+
+            <div class="blog-code">
+                sudo mkdir -p /var/lib/tomcat9
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's extract the file to this location:
+            </p>
+
+            <div class="blog-code">
+                sudo tar xvf apache-tomcat-9*tar.gz -C /var/lib/tomcat8 --strip-components=1
+            </div>
+
+            <p class="blog-paragraph">
+                Since we have already set the JAVA_HOME variable from before in the java installation, we
+                only need to set the CATALINA_HOME variable which is what tomcat uses:
+            </p>
+
+            <div class="blog-code">
+                export CATALINA_HOME=/var/lib/tomcat9
+            </div>
+
+            <p class="blog-paragraph">
+                Once again like before, let's confirm the environment variable changes by running the following
+                with the source being different this time:
+            </p>
+
+            <div class="blog-code">
+                source ~/.bashrc
+            </div>
+
+            <p class="blog-paragraph">
+                To run tomcat use the following:
+            </p>
+
+            <div class="blog-code">
+                sudo $CATALINA_HOME/bin/startup.sh
+            </div>
+
+            <p class="blog-paragraph">
+                Then go to your droplet's IP address with colon 8080 at the end of it to see the tomcat page.
+                This means that tomcat is installed correctly.  If you are not seeing the screen below, then make sure
+                that the CATALINA_HOME variable is set correctly (if using tomcat 9 then we need to put a .war
+                file in the tomcat9/webapps directory before we can successfully visit the page below, so keep
+                reading to the end and then do this):
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic16.png" alt="digital oceans droplet creation" class="blog-image">
+
+            
+            <p class="blog-paragraph">
+                Next let's navigate to the tomcat9 directory:
+            </p>
+
+            <div class="blog-code">
+                cd /var/lib/tomcat9
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's configure some permissions for this folder:
+            </p>
+
+            <div class="blog-code">
+                sudo chgrp -R tomcat conf
+            </div>
+
+            <div class="blog-code">
+                sudo chmod g+rwx conf
+            </div>
+
+            <div class="blog-code">
+                sudo chmod g+r conf/*
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's make the tomcat user the owner of the work, webapps, logs and temp directories:
+            </p>
+
+            <div class="blog-code">
+                sudo chown -R tomcat work/ webapps/ logs/ temp/
+            </div>
+
+            <p class="blog-paragraph">
+                Next is a startup script to let tomcat know to start every time the server is restarted.
+                Since we are using digital ocean then we are not allowed to restart the server, but I will
+                include this script anyways for those of you who are using your company's own servers.
+                First make the directory /etc/init:
+            </p>
+
+            <div class="blog-code">
+                sudo mkdir /etc/init
+            </div>
+
+            <p class="blog-paragraph">
+                Then create the tomcat.conf file:
+            </p>
+
+            <div class="blog-code">
+                sudo touch tomcat.conf
+            </div>
+
+            <p class="blog-paragraph">
+                Now use the nano text editor to edit this file (assuming you navigated into the /init folder):
+            </p>
+
+            <div class="blog-code">
+                nano tomcat.conf
+            </div>
+
+            <p class="blog-paragraph">
+                Now enter the following:
+            </p>
+
+            <div class="blog-code">
+                description "Tomcat Server"
+            </div>
+
+            <p class="blog-paragraph">
+                This next part should have an enter in between it and the rest of these lines should be
+                indented over by about 4 spaces or so.
+            </p>
+
+            <div class="blog-code">
+                start on runlevel [2345]
+                <br>
+                stop on runlevel [!2345]
+                <br>
+                respawn
+                <br>
+                respawn limit 10 5
+                <br>
+                <br>
+              
+                setuid tomcat
+                <br>
+                setgid tomcat
+                <br>
+                <br>
+              
+                #env JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
+                <br>
+                env JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
+                <br>
+                env CATALINA_HOME=/var/lib/tomcat8
+                <br>
+                <br>
+              
+                # Modify these options as needed
+                <br>
+                env JAVA_OPTS="-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
+                <br>
+                env CATALINA_OPTS="-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+                <br>
+                <br>
+              
+                exec $CATALINA_HOME/bin/catalina.sh run
+                <br>
+                <br>
+              
+                # cleanup temp directory after stop
+                <br>
+                post-stop script
+                <br>
+                rm -rf $CATALINA_HOME/temp/*
+                <br>
+                end script
+            </div>
+
+            <p class="blog-paragraph">
+                Next let's edit the tomcat users xml file and add our user that we made earlier:
+            </p>
+
+            <div class="blog-code">
+                nano /var/lib/tomcat9/conf/tomcat-users.xml
+            </div>
+
+            <p class="blog-paragraph">
+                In here let's add the following:
+            </p>
+
+            <div class="blog-code">
+                &lt;role rolename="manager-gui"/&gt;
+                <br>
+                &lt;role rolename="admin-gui"/&gt;
+                <br>
+                &lt;user username="admin" password="s3cret" roles="manager-gui,admin-gui"/&gt;
+            </div>
+
+            <p class="blog-paragraph">
+                Remember I said we still need to download the jdbc postgresql driver and set it up with tomcat?
+                Let's go ahead and do that now.  Google postgresql jdbc driver download and go to a page that should
+                be similar to this and copy the link address the same way that we did before with tomcat:
+            </p>
+
+            <img src="../../pictures/deploy-spring-bootwar-file-tomcat/pic17.png" alt="digital oceans droplet creation" class="blog-image">
+
+            <p class="blog-paragraph">
+                Use wget and download it, I recommend downloading it in a /tempjar folder in your root directory:
+            </p>
+
+            <div class="blog-code">
+                cd /
+            </div>
+
+            <div class="blog-code">
+                mkdir /tempjar
+            </div>
+
+            <div class="blog-code">
+                wget https://jdbc.postgresql.org/download/postgresql-42.2.14.jar
+            </div>
+
+            <p class="blog-paragraph">
+                After we do this, we need to copy this jar file to our $CATALINA_HOME/lib folder (/var/lib/tomcat9/lib).
+                This way it can be recognized by the DBCP 2's Classloader as stated
+                <a style="text-decoration: none; color: rgb(38, 255, 0);" target="_blank" 
+                href="https://tomcat.apache.org/tomcat-9.0-doc/jndi-datasource-examples-howto.html">here</a>
+                in the postgresql section.
+            </p>
+
+            <div class="blog-code">
+                sudo cp postgresql-42.2.14.jar /var/lib/tomcat9/lib
+            </div>
+
+            <p class="blog-paragraph">
+                Now we to do some context configuration.  Let's navigate to the context file.
+            </p>
+
+            <div class="blog-code">
+                cd /var/lib/tomcat9/conf
+            </div>
+
+            <div class="blog-code">
+                nano context.xml
+            </div>
+
+            <p class="blog-paragraph">
+                Now there's two ways we can go about configuring our context.xml file.  The first way is to make this data source available to
+                multiple tomcat applications.  The second way is to make it available to only the current tomcat application.  For both ways
+                replace the "myuser" and "mypasswd" with the credentials you use for the postgresql cli.  Remember
+                the default username for postgresql is just "postgres":
+            </p>
+
+            <p class="blog-paragraph">
+                The first way (make data source available to multiple tomcat applications):
+            </p>
+
+            <div class="blog-code">
+                &lt;Resource name="jdbc/postgres" auth="Container"
+                <br>
+                type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
+                <br>
+                url="jdbc:postgresql://127.0.0.1:5432/mydb"
+                <br>
+                username="myuser" password="mypasswd" maxTotal="20" maxIdle="10" maxWaitMillis="-1"/&gt;
+            </div>
+
+            <p class="blog-paragraph">
+                The second way (make data source available to current tomcat application):
+            </p>
+
+            <div class="blog-code">
+                &lt;Resource name="jdbc/postgres" auth="Container"
+                <br>
+                type="javax.sql.DataSource" driverClassName="org.postgresql.Driver"
+                <br>
+                url="jdbc:postgresql://127.0.0.1:5432/mydb"
+                <br>
+                username="myuser" password="mypasswd" maxTotal="20" maxIdle="10" maxWaitMillis="-1"/&gt;
+            </div>
+
+            <p class="blog-paragraph">
+                Now let's save the changes and exit out of the nano text editor:
+            </p>
+
+            <div class="blog-code">
+                Ctrl + O
+            </div>
+
+            <p class="blog-paragraph">
+                then
+            </p>
+
+            <div class="blog-code">
+                Enter
+            </div>
+
+            <p class="blog-paragraph">
+                and
+            </p>
+
+            <div class="blog-code">
+                Ctrl + X
+            </div>
+
+            <p class="blog-paragraph">
+                Once that's done, we need to edit our web.xml file.  While we're still in our /conf directory
+                let's open the nano text editor for the web.xml file here:
+            </p>
+
+            <div class="blog-code">
+                nano web.xml
+            </div>
+
+            <p class="blog-paragraph">
+                Enter the following in there.  The description can be changed to whatever you want:
+            </p>
+
+            <div class="blog-code">
+                &lt;resource-ref&gt;
+                <br>
+                &lt;description&gt;postgreSQL Datasource example&lt;/description&gt;
+                <br>
+                &lt;res-ref-name&gt;jdbc/postgres&lt;/res-ref-name&gt;
+                <br>
+                &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt;
+                <br>
+                &lt;res-auth&gt;Container&lt;/res-auth&gt;
+                <br>
+                &lt;/resource-ref&gt;
+            </div>
+
+            <p class="blog-paragraph">
+                Make sure to append "java:/comp/env" to your jdbc url in your application.properties, application.yml
+                or wherever you have your jdbc url in your application when deploying to tomcat.
+            </p>
+        </section>
+
+        <section class="blog-section" id="part6">
+            <h1 class="blog-section-header">Part 6: Pulling Spring Boot Application From Github And Deploying</h1>
+
+            <p class="blog-paragraph">
+                I used github for this demo so I used the command git clone to pull the entire project to the droplet.
+                Before I did this I just made a folder called /api in the root directory:
+            </p>
+
+            <div class="blog-code">
+                cd ~/..
+            </div>
+
+            <div class="blog-code">
+                sudo mkdir /api
+            </div>
+
+            <p class="blog-paragraph">
+                I navigated into this folder:
+            </p>
+
+            <div class="blog-code">
+                cd /api
+            </div>
+
+            <p class="blog-paragraph">
+                Then I git cloned the repository:
+            </p>
+
+            <div class="blog-code">
+                git clone https://github.com/your-username/your-project-name.git
+            </div>
+
+            <p class="blog-paragraph">
+                Now let's navigate into the folder that was created first by listing the directories inside the /api
+                folder to find it and navigating into it:
+            </p>
+
+            <div class="blog-code">
+                ls
+            </div>
+
+            <div class="blog-code">
+                cd your-project-name
+            </div>
+
+            <p class="blog-paragraph">
+                Once we are in there, we need to run mvn clean install.  Before we do that, we need to download maven
+                on to this droplet:
+            </p>
+
+            <div class="blog-code">
+                sudo apt-get install maven
+            </div>
+
+            <p class="blog-paragraph">
+                We can check that maven is installed properly by calling the following:
+            </p>
+
+            <div class="blog-code">
+                mvn -version
+            </div>
+
+            <p class="blog-paragraph"> 
+                Now (assuming you are in your project's name directory that you pulled from github) let's
+                run mvn clean install build the .war file.
+            </p>
+
+            <div class="blog-code">
+                mvn clean install
+            </div>
+
+            <p class="blog-paragraph"> 
+                Now let's finally put our .war file in the webapps directory of tomcat so it can be served (Call sudo $CATALINA_HOME/bin/startup.sh to restart the tomcat server to see the changes
+                you have made).
+            </p>
+
+            <div class="blog-code">
+                sudo cp your-war-file.war /var/lib/tomcat9/webapps
+            </div>
+
+            <div class="blog-code">
+                sudo $CATALINA_HOME/bin/startup.sh
+            </div>
+
+            <!--I might not need to include this-->
+            <!--
+            <p class="blog-paragraph"> 
+                We also need to go to our catalina.properties file and make a path for our application.properties/application.yml 
+                file.     
+            </p>
+
+            <div class="blog-code">
+                cd /var/lib/tomcat9/conf
+            </div>
+
+            <div class="blog-code">
+                nano catalina.properties
+            </div>
+
+            <p class="blog-paragraph"> 
+                Where it says shared.loader where we need to put this (your's could be different) with double quotes:  
+            </p>
+
+            <div class="blog-code">
+                "/var/lib/tomcat9/webapps/application.yml"
+            </div>
+
+            <p class="blog-paragraph"> 
+                Now we need to make this file:
+            </p>
+
+            <div class="blog-code">
+                cd /var/lib/tomcat9/webapps
+            </div>
+
+            <div class="blog-code">
+                touch application.yml
+            </div>
+
+            <div class="blog-code">
+                nano application.yml
+            </div>
+
+            <p class="blog-paragraph"> 
+                Then copy and paste the application properties file from your project to this file.  I used the
+                double touch functionality on my touch pad to paste it in it could be different for you.
+            </p>
+
+            <p class="blog-paragraph"> 
+                After that save it and exit the nano text editor.
+            </p>
+
+            <div class="blog-code">
+                Ctrl + O
+            </div>
+
+            <div class="blog-code">
+                Enter
+            </div>
+
+            <div class="blog-code">
+                Ctrl + X
+            </div>
+        -->
+
+            <p class="blog-paragraph"> 
+                That's it! We have deployed our java spring boot application to the cloud as a .war file... bon apetit!
+            </p>
+            
+        </section>
+    </div>
+    
+    <section id="footer" class='footer-active'></section>
+</body>
+</html>

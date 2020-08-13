@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infotech Nano</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="pictures/infotechnano_logo.png">
+
+    <style>
+        #blog-header{
+            width: 100%;
+            text-align: center;
+            margin: 3vh 0;
+            color: magenta;
+            font-size: 5rem;
+        }
+
+        #blog-list{
+            list-style-type: none;
+            margin: 1vh auto;
+            display: block;
+            width: 100%;
+            padding: 0 5vw;
+        }
+
+        .blog-list-item{
+            width: 100%;
+            height: 30vh;
+            padding: 5px;
+            background-color: transparent;
+            border-bottom: magenta 1px solid;
+            border-left: magenta 1vw solid;
+            border-radius: 10px 0 0 10px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            text-decoration: none;
+            align-items: center;
+        }
+
+        .blog-img-container{
+            width: 20%;
+            height: 100%;
+            position: relative;
+            border: black 1px solid;
+            border-radius: 10px;
+            overflow: hidden;
+            right: 0;
+        }
+
+        .blog-img{
+            width: 100%;
+            height: 100%;
+        }
+
+        .blog-desc{
+            height: 100%;
+            margin-left: 3vh;
+        }
+
+        .blog-title{
+            font-size: 3rem;
+            color: magenta;
+        }
+
+        .blog-timestamp{
+            color: #888;
+        }
+
+        @media (max-width: 480px){
+            .blog-img{
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class='header'>
+        <a href="index.html" id="header-title">Infotech Nano</a>
+        <nav class='navbar'>
+            <div class='nav-item'>
+              <a href="javablogs.html" class='nav-link'>Java</a>  
+            </div>
+            <div class='nav-item'>
+                <a href="aspnetblogs.html" class='nav-link'>Asp.net</a>
+            </div>
+            <div class='nav-item'>
+                <a href="AIblogs.html" class='nav-link'>AI</a>
+            </div>
+        </nav>
+        <div class='header-bottom'></div>
+    </section>
+
+    <h2 id="blog-header">Asp.Net Topics</h2>
+
+    <ul id="blog-list">
+        <li>
+            <a href="aspnetblogs/aspnetfullstack.html" class="blog-list-item">
+                <div class="blog-desc">
+                    <p class="blog-title">Asp.Net Full Stack For Beginners</p>
+                    <br>
+                    <p class="blog-timestamp">06/12/2020</p>
+                </div>
+
+                <div class="blog-img-container">
+                    <img class="blog-img" src="pictures/net_core.png" alt="net core">
+                </div>
+            </a>
+        </li>
+        
+    </ul>
+
+    <section id="footer" class='footer'></section>
+</body>
+</html>
