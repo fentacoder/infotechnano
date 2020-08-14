@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jamar.io</title>
-    <link rel="stylesheet" href="../../app.css">
+    <link rel="stylesheet" href="../../styles.css">
     <link rel="icon" type="image/jpg" href="../pictures/profile_pic.JPG">
 
     <style>
@@ -19,19 +19,16 @@
 </head>
 <body>
     <section class='header'>
-        <h1 id="header-title">Jamar.io</h1>
+        <a href="../../index.html" id="header-title">Infotech Nano</a>
         <nav class='navbar'>
             <div class='nav-item'>
-              <a href="../../index.html" class='nav-link'>home</a>  
+              <a href="../../javablogs.html" class='nav-link'>Java</a>  
             </div>
             <div class='nav-item'>
-                <a href="../../blog.html" class='nav-link'>blog</a>
+                <a href="../../aspnetblogs.html" class='nav-link'>Asp.net</a>
             </div>
             <div class='nav-item'>
-                <a href="../../projects.html" class='nav-link'>projects</a>
-            </div>
-            <div class='nav-item'>
-                <a href="../../resume.html" class='nav-link'>resume</a>
+                <a href="../../AIblogs.html" class='nav-link'>AI</a>
             </div>
         </nav>
         <div class='header-bottom'></div>
@@ -140,9 +137,26 @@
             </div>
 
             <p class="blog-paragraph">
+                Let's set up a password for our "postgres" user so we don't get any nasty database errors later.
+                Inside of the postgresql command line type this (the password can be whatever you want):
+            </p>
+
+            <div class="blog-code">
+                postgres=# ALTER USER postgres PASSWORD 'myPassword';
+            </div>
+
+            <p class="blog-paragraph">
                 From here you can create databases, tables and anything you would normally do with SQL databases.
                 To exit postgresql just enter \q and press enter.
             </p>
+
+            <p class="blog-paragraph">
+                Make sure to restart postgresql after any changes are made to it by using:
+            </p>
+
+            <div class="blog-code">
+                sudo systemctl restart postgresql
+            </div>
 
             <p class="blog-paragraph">
                 Now we need to download the jdbc postgresql driver and set it up with tomcat, but we will do that
@@ -575,6 +589,36 @@
             </div>
 
             <p class="blog-paragraph">
+                If you want to change tomcat to listen on port 80 so users don't have to type the port number in
+                then do the following with iptables:
+            </p>
+
+            <div class="blog-code">
+                iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+            </div>
+
+            <p class="blog-paragraph">
+                If you want to remove that port forwarding then do this:
+            </p>
+
+            <div class="blog-code">
+                iptables -t nat -D PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+            </div>
+
+            <p class="blog-paragraph">
+                Also for the forwarding to work we need to edit the server.xml file by changing the port
+                attribute from "8080" to "80":
+            </p>
+
+            <div class="blog-code">
+                &lt;Connector port="80" protocol="HTTP/1.1" 
+                <br>
+                connectionTimeout="20000" 
+                <br>
+                redirectPort="8443"/&gt;
+            </div>
+
+            <p class="blog-paragraph">
                 Remember I said we still need to download the jdbc postgresql driver and set it up with tomcat?
                 Let's go ahead and do that now.  Google postgresql jdbc driver download and go to a page that should
                 be similar to this and copy the link address the same way that we did before with tomcat:
@@ -707,11 +751,6 @@
                 <br>
                 &lt;/resource-ref&gt;
             </div>
-
-            <p class="blog-paragraph">
-                Make sure to append "java:/comp/env" to your jdbc url in your application.properties, application.yml
-                or wherever you have your jdbc url in your application when deploying to tomcat.
-            </p>
         </section>
 
         <section class="blog-section" id="part6">

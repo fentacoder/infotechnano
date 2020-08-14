@@ -25,6 +25,7 @@ body{
     color: black;
     cursor: pointer;
     text-decoration: none;
+    font-size: 2rem;
 }
 
 .navbar{
@@ -156,7 +157,6 @@ body{
     height: auto;
     padding: 5px;
     line-height: 10vh;
-    background-color: rgb(38, 255, 0);
 }
 
 .blog-content{
