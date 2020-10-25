@@ -47,10 +47,10 @@ body{
 .nav-item{
     height: 5vh;
     padding: 10px;
-    background-color: rgb(38, 255, 0);
+    background-color:white;
     border-radius: 5px;
     border: none;
-    color:white;
+    color:rgb(38, 255, 0);
     margin-right: 10px;
     text-decoration: none;
     align-self: center;
