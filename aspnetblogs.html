@@ -8,11 +8,15 @@
     <link rel="icon" type="image/png" href="pictures/infotechnano_logo.png">
 
     <style>
+        body{
+            background:  magenta;
+        }
+
         #blog-header{
             width: 100%;
             text-align: center;
             margin: 3vh 0;
-            color: magenta;
+            color: white;
             font-size: 5rem;
         }
 
@@ -26,24 +30,24 @@
 
         .blog-list-item{
             width: 100%;
-            height: 30vh;
+            height: 35vh;
             padding: 5px;
-            background-color: transparent;
-            border-bottom: magenta 1px solid;
-            border-left: magenta 1vw solid;
-            border-radius: 10px 0 0 10px;
+            background-color: white;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
             cursor: pointer;
             text-decoration: none;
             align-items: center;
+            box-shadow: 9px 8px 6px -6px rgba(0, 0, 0,0.2);
+            margin: 1vh 0;
         }
 
         .blog-img-container{
             width: 20%;
-            height: 100%;
+            height: 90%;
             position: relative;
-            border: black 1px solid;
+            border: magenta 1px solid;
             border-radius: 10px;
             overflow: hidden;
             right: 0;
@@ -79,15 +83,9 @@
     <section class='header'>
         <a href="index.html" id="header-title">Infotech Nano</a>
         <nav class='navbar'>
-            <div class='nav-item'>
-              <a href="javablogs.html" class='nav-link'>Java</a>  
-            </div>
-            <div class='nav-item'>
-                <a href="aspnetblogs.html" class='nav-link'>Asp.net</a>
-            </div>
-            <div class='nav-item'>
-                <a href="AIblogs.html" class='nav-link'>AI</a>
-            </div>
+            <a href="javablogs.html" class='nav-item'>Java</a>  
+            <a href="aspnetblogs.html" class='nav-item'>Asp.Net</a>
+            <a href="AIblogs.html" class='nav-item'>AI</a>
         </nav>
         <div class='header-bottom'></div>
     </section>

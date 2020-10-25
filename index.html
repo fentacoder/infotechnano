@@ -8,20 +8,75 @@
     <link rel="icon" type="image/png" href="pictures/infotechnano_logo.png">
 
     <style>
-        #blog-header{
-            width: 100%;
-            text-align: center;
-            margin: 3vh 0;
-            color: rgb(38, 255, 0);
-            font-size: 5rem;
+        .link-item-cont{
+            box-shadow: 0 8px 6px -6px rgba(0, 0, 0,0.2);
+            border: none;
+            border-radius: 10px;
+            width: 25vw;
+            height: 50vh;
+            text-decoration: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;            
         }
 
-        .legend-item{
-            color: white;
-            border-radius: 5px;
-            padding: 5px;
+        .card-style{
+            width: 80%;
+            height: 1vh;
+            background: white;
             border: none;
-            margin: 1px 0;
+            position: relative;
+            top: -15vh;
+            z-index: 2;
+        }
+
+        .circle-style{
+            background: black;
+            border: none;
+            border-radius: 50%;
+            position: relative;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 30px;
+            margin-right: auto;
+            margin-left: 5px;
+            margin-top: 5px;
+        }
+
+        .remove-style{
+            background: white;
+            border: none;
+            border-radius: 0 0 0 50%;
+            width: 40px;
+            height: 40px;
+        }
+
+        .shape-style-cont{
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .style-img{
+            width: 35vw;
+            height: 20vh;
+            z-index: 3;
+            position: relative;
+            top: -6vh;
+            left: -12vw;
+            transform: scale(1.5);
+            transform: rotate(-20deg);
+        }
+
+        .link-text{
+            color: white;
+            text-align: center;
+            width: 100%;
+            font-weight: bold;
+            font-size: 2rem;
+            font-family: 'Franklin Gothic Medium';
             text-align: center;
         }
     </style>
@@ -30,25 +85,43 @@
     <section class='header'>
         <a href="index.html" id="header-title">Infotech Nano</a>
         <nav class='navbar'>
-            <div class='nav-item'>
-              <a href="javablogs.html" class='nav-link'>Java</a>  
-            </div>
-            <div class='nav-item'>
-                <a href="aspnetblogs.html" class='nav-link'>Asp.net</a>
-            </div>
-            <div class='nav-item'>
-                <a href="AIblogs.html" class='nav-link'>AI</a>
-            </div>
+            <a href="javablogs.html" class='nav-item'>Java</a>  
+            <a href="aspnetblogs.html" class='nav-item'>Asp.Net</a>
+            <a href="AIblogs.html" class='nav-item'>AI</a>
         </nav>
         <div class='header-bottom'></div>
     </section>
 
-    <h2 id="blog-header">Topics</h2>
+    <div style="display: flex; margin: 3vh auto; width: 100%;align-items: center;justify-content: space-around;
+        padding: 0 10vw;">
+        <a href="javablogs.html" class="link-item-cont" style="background: rgb(38, 255, 0);">
+            <div class="shape-style-cont">
+              <div class="circle-style"></div>  
+              <div class="remove-style"></div>
+            </div>
+            <img src="./pictures/white_logo.png" class="style-img" alt="white logo">
+            <div class="card-style"></div>
+            <p class="link-text">Java</p>
+        </a>
+        <a href="aspnetblogs.html" class="link-item-cont" style="background: magenta;">
+            <div class="shape-style-cont">
+              <div class="circle-style"></div>  
+              <div class="remove-style"></div>
+            </div>
+            <img src="./pictures/white_logo.png" class="style-img" alt="white logo">
+            <div class="card-style"></div>
+            <p  class="link-text">Asp.Net</p>
 
-    <div style="display: flex; margin: 3vh auto; width: 30%;align-items: center;flex-direction: column;">
-        <a href="javablogs.html" style="background: rgb(38, 255, 0);text-decoration: none; width: 100%;font-size: 2rem;" class="legend-item">java</a>
-        <a href="aspnetblogs.html" style="background: purple;text-decoration: none;width: 100%;font-size: 2rem;" class="legend-item">asp.net</a>
-        <a href="AIblogs.html" style="background: orange;text-decoration: none;width: 100%;font-size: 2rem;" class="legend-item">AI</a>
+        </a>
+        <a href="AIblogs.html" class="link-item-cont" style="background: orange;">
+            <div class="shape-style-cont">
+              <div class="circle-style"></div>  
+              <div class="remove-style"></div>
+            </div>
+            <img src="./pictures/white_logo.png" class="style-img" alt="white logo">
+            <div class="card-style"></div>
+            <p  class="link-text">AI</p>
+        </a>
     </div>
 
     <section id="footer" class='footer'></section>
